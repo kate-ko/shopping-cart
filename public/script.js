@@ -11,10 +11,21 @@ var ShoppingCart = function () {
     return sum;
   }
 
+  var STORAGE_ID = 'shopping-cart';
+
+  var getFromLocalStorage = function () {
+    cartData.cart = JSON.parse(localStorage.getItem(STORAGE_ID) || '[]');
+  }
+
+  var saveToLocalStorage = function () {
+    localStorage.setItem(STORAGE_ID, JSON.stringify(cartData.cart));
+  }
+
   var updateCart = function () {
     // TODO: Write this function. In this function we render the page.
     // Meaning we make sure that all our cart items are displayed in the browser.
     // Remember to empty the "cart div" before you re-add all the item elements.
+    getFromLocalStorage();
     var source = $('#cart-template').html();
     var template = Handlebars.compile(source);
     var newHTML = template(cartData);
@@ -29,6 +40,7 @@ var ShoppingCart = function () {
     // TODO: Write this function. Remember this function has nothing to do with display. 
     // It simply is for adding an item to the cart array, no HTML involved - honest ;-)
     cartData.cart.push({item:item, price: price});
+    saveToLocalStorage();
   }
 
   var clearCart = function () {
@@ -36,6 +48,7 @@ var ShoppingCart = function () {
     $('.cart-list').empty();
     cartData.cart.splice(0,cartData.cart.length);
     $('.total').html(sumOfCart());
+    saveToLocalStorage();
   }
   
   return {
